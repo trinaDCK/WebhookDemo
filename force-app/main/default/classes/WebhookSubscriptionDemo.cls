@@ -9,7 +9,10 @@ global with sharing class WebhookSubscriptionDemo{
         JSONParser parser = JSON.createParser(request.requestbody.toString());
         pusher ps;
         head_commit hc;  
-        String repo;         
+
+        String repo;      
+        String repo;  
+
         while(parser.nextToken()!=null)
         {
             if(parser.getText() == 'pusher'){
@@ -34,7 +37,7 @@ global with sharing class WebhookSubscriptionDemo{
         GIT_PushDetail__c detail = new GIT_PushDetail__c();
         detail.Commiter_Name__c = ps!=null?ps.name:'';
         detail.Commiter_Email__c = ps!=null?ps.email:'';
-        detail.Commit_Message__c = hc!=null?hc.message:'';
+        detail.Commit_Message__c = hc!=null?hc.message:'';  
         //detail.Commit_Timestamp__c = hc!=null?hc.timestamp:'';
         detail.Committed_URL__c = hc!=null?hc.url:'';
         detail.Repository_Name__c = repo;
