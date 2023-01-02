@@ -4,22 +4,21 @@ global with sharing class WebhookSubscriptionDemo{
     global static void handleNotification(){
         RestRequest request = RestContext.request;
         RestResponse response = RestContext.response;
+
         String hashedval = request.headers.get('X-Hub-Signature-256');
         Blob bB = request.requestBody;
         JSONParser parser = JSON.createParser(request.requestbody.toString());
+
         pusher ps;
-        head_commit hc;  
-
-        String repo;      
-        String repo;  
-
+        head_commit hc;
+        String repo;
         while(parser.nextToken()!=null)
         {
             if(parser.getText() == 'pusher'){
                 System.debug('Inside Pusher');
-                parser.nextToken();   
+                parser.nextToken();
                 ps = (pusher)parser.readValueAs(pusher.class);
-                System.debug(ps); 
+                System.debug(ps);
             }
             if(parser.getText()=='head_commit'){
                 System.debug('Inside Head Commit');
@@ -27,6 +26,7 @@ global with sharing class WebhookSubscriptionDemo{
                 hc = (head_commit)parser.readValueAs(head_commit.class);
                 System.debug(hc);
             }
+
             if(parser.getText() == 'full_name'){
                 System.debug('Inside Full Name');
                 parser.nextToken();      
@@ -37,7 +37,7 @@ global with sharing class WebhookSubscriptionDemo{
         GIT_PushDetail__c detail = new GIT_PushDetail__c();
         detail.Commiter_Name__c = ps!=null?ps.name:'';
         detail.Commiter_Email__c = ps!=null?ps.email:'';
-        detail.Commit_Message__c = hc!=null?hc.message:'';  
+        detail.Commit_Message__c = hc!=null?hc.message:'';
         //detail.Commit_Timestamp__c = hc!=null?hc.timestamp:'';
         detail.Committed_URL__c = hc!=null?hc.url:'';
         detail.Repository_Name__c = repo;
@@ -48,6 +48,8 @@ global with sharing class WebhookSubscriptionDemo{
         response.statusCode = 200;
         response.responseBody = Blob.valueOf(JSON.serialize(new SFDCResponse('Success','Processed Successfully')));
     }
+
+
 public class SFDCResponse{
     String response;
     String message;
@@ -64,6 +66,7 @@ public class pusher{
         email = email;
     }
 }
+
 public class head_commit{
     public string message;
     //public String timestamp;
